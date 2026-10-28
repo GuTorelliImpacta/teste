@@ -1,0 +1,12 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+assets-cliente/
+playwright-report
+test-results
+*.log
+.DS_Store
+dist-server
+.vite-react-ssg-temp

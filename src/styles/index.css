@@ -1,0 +1,180 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Sora';
+  src: url('../assets/fonts/sora-latin.woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+/* Fontes de reserva ajustadas para o swap não gerar CLS. */
+@font-face {
+  font-family: 'Sora Fallback';
+  src: local('Arial');
+  size-adjust: 104%;
+  ascent-override: 93%;
+  descent-override: 24%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+@theme {
+  --font-display: 'Sora', 'Sora Fallback', system-ui, sans-serif;
+  --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
+
+  --color-cream-50: #fbfbf7;
+  --color-cream-100: #f4f4ec;
+  --color-cream-200: #e9e9db;
+  --color-cream-300: #d9d9c3;
+
+  --color-olive-50: #f2f2e8;
+  --color-olive-100: #e1e1cb;
+  --color-olive-200: #c9c9a5;
+  --color-olive-300: #adad7e;
+  --color-olive-400: #9a9a6c;
+  --color-olive-500: #8b8b5e;
+  --color-olive-600: #75754d;
+  --color-olive-700: #5f5f3c;
+  --color-olive-800: #4a4a2e;
+  --color-olive-900: #36361f;
+
+  --color-copper-50: #fbf3ea;
+  --color-copper-100: #f5e1ca;
+  --color-copper-200: #ebc196;
+  --color-copper-300: #de9c62;
+  --color-copper-400: #ce7e36;
+  --color-copper-500: #b8651b;
+  --color-copper-600: #9a5214;
+  --color-copper-700: #7c4110;
+  --color-copper-800: #5f320d;
+  --color-copper-900: #43230a;
+
+  --color-khaki-100: #f0ead6;
+  --color-khaki-200: #e0d5b0;
+  --color-khaki-300: #d1c297;
+  --color-khaki-400: #c2b280;
+  --color-khaki-500: #a8985f;
+  --color-khaki-600: #8a7b48;
+
+  --color-ink-50: #f3f1ef;
+  --color-ink-100: #e3dfdb;
+  --color-ink-200: #c5bdb6;
+  --color-ink-300: #a09489;
+  --color-ink-400: #7e7064;
+  --color-ink-500: #6b5b50;
+  --color-ink-600: #54463d;
+  --color-ink-700: #3e3029;
+  --color-ink-800: #30241d;
+  --color-ink-900: #241a14;
+
+  --color-wa-500: #1a9a52;
+  --color-wa-600: #0e7a3e;
+  --color-wa-700: #0b6633;
+
+  --text-h1: clamp(2rem, 1.2rem + 3.6vw, 3.5rem);
+  --text-h2: clamp(1.625rem, 1.1rem + 2.2vw, 2.5rem);
+  --radius-card: 0.625rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: var(--color-ink-900);
+    background: var(--color-cream-100);
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-copper-600);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .escuro :focus-visible {
+    outline-color: var(--color-khaki-300);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility h1 {
+  font-size: var(--text-h1);
+}
+@utility h2 {
+  font-size: var(--text-h2);
+}
+@utility losango {
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+@utility corte {
+  clip-path: polygon(0 0, calc(100% - 1.25rem) 0, 100% 1.25rem, 100% 100%, 0 100%);
+}
+/* Ripas verticais, referência ao painel ripado. Só CSS, sem imagem. */
+@utility ripado {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgb(194 178 128 / 0.16) 0,
+    rgb(194 178 128 / 0.16) 10px,
+    transparent 10px,
+    transparent 22px
+  );
+}
+@utility ripado-escuro {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgb(36 26 20 / 0.07) 0,
+    rgb(36 26 20 / 0.07) 10px,
+    transparent 10px,
+    transparent 22px
+  );
+}
+
+/* Reveal: só esconde depois que o JS marcou o html, então sem JS tudo aparece. */
+html.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 300ms ease-out,
+    transform 300ms ease-out;
+}
+html.reveal-ready [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+dialog::backdrop {
+  background: rgb(36 26 20 / 0.85);
+}

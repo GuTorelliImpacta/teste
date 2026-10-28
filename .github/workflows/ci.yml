@@ -1,0 +1,29 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  qualidade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm audit --audit-level=high
+      - run: npm run build
+      - run: npm run check:bundle
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Lighthouse (mobile) com metas mínimas
+        run: |
+          npx vite preview --port 4173 &
+          sleep 3
+          npx --yes lighthouse@12 http://localhost:4173/ --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=lh.json --quiet
+          node -e 'const r=require("./lh.json");let ok=true;for(const [k,v] of Object.entries(r.categories)){const s=Math.round(v.score*100);console.log(k,s);if(s<95)ok=false}
+          const lcp=r.audits["largest-contentful-paint"].numericValue,cls=r.audits["cumulative-layout-shift"].numericValue;console.log("LCP",lcp,"CLS",cls);if(lcp>2500||cls>0.05)ok=false;process.exit(ok?0:1)'
+  # Antes de publicar em produção, rode localmente: npm run build:prod (falha com placeholders).
